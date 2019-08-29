@@ -50,26 +50,26 @@ export default [
       }
     ]
   },
-  {
-    path: '/components',
-    name: 'components',
-    meta: {
-      icon: 'logo-buffer',
-      title: '组件'
-    },
-    component: Main,
-    children: [
-      {
-        path: 'tables_page',
-        name: 'tables_page',
-        meta: {
-          icon: 'md-grid',
-          title: '多功能表格'
-        },
-        component: () => import('@/view/components/tables/tables.vue')
-      }
-    ]
-  },
+  // {
+  //   path: '/components',
+  //   name: 'components',
+  //   meta: {
+  //     icon: 'logo-buffer',
+  //     title: '组件'
+  //   },
+  //   component: Main,
+  //   children: [
+  //     {
+  //       path: 'tables_page',
+  //       name: 'tables_page',
+  //       meta: {
+  //         icon: 'md-grid',
+  //         title: '多功能表格'
+  //       },
+  //       component: () => import('@/view/components/tables/tables.vue')
+  //     }
+  //   ]
+  // },
   {
     path: '/advertisement',
     name: 'advertisement',
@@ -86,91 +86,149 @@ export default [
           icon: 'md-grid',
           title: '广告'
         },
-        // component: () => import('@/view/components/lyjviews/advertisement/advertisement.vue')
+        component: () => import('@/view/components/lyjviews/advertisement/advertisement.vue')
         
       }
     ]
   },
   {
-    path: '/requiretype',
-    name: 'requiretype',
+    path: '/requirement',
+    name: 'requirement',
     meta: {
-      icon: 'logo-buffer',
+      icon: 'md-grid',
       title: '需求'
     },
     component: Main,
     children: [
       {
         path: 'requiretype_page',
-        name: '需求类型',
+        name: 'requiretype_page',
         meta: {
           icon: 'md-grid',
           title: '需求类型'
         },
         component: () => import('@/view/components/lyjviews/requirement-type/requirementType.vue')
+      },
+      {
+        path: 'requirement_page',
+        name: 'requirement_page',
+        meta: {
+          icon: 'md-grid',
+          title: '需求列表'
+        },
+        component: () => import('@/view/components/lyjviews/requirement/requirement.vue')
+      },
+      {
+        path: 'requireapply_page',
+        name: 'requireapply_page',
+        meta: {
+          icon: 'md-grid',
+          title: '需求申请'
+        },
+        component: () => import('@/view/components/lyjviews/requirement-apply/requirementApply.vue')
       }
     ]
   },
   {
-    path: '/multilevel',
-    name: 'multilevel',
+    path: '/user',
+    name: 'user',
     meta: {
-      icon: 'md-menu',
-      title: '多级菜单'
+      icon: 'logo-buffer',
+      title: '用户'
     },
     component: Main,
     children: [
       {
-        path: 'level_2_1',
-        name: 'level_2_1',
+        path: 'user_page',
+        name: 'user_page',
         meta: {
-          icon: 'md-funnel',
-          title: '二级-1'
+          icon: 'md-grid',
+          title: '用户'
         },
-        component: () => import('@/view/multilevel/level-2-1.vue')
-      },
-      {
-        path: 'level_2_2',
-        name: 'level_2_2',
-        meta: {
-          access: ['super_admin'],
-          icon: 'md-funnel',
-          showAlways: true,
-          title: '二级-2'
-        },
-        component: parentView,
-        children: [
-          {
-            path: 'level_2_2_1',
-            name: 'level_2_2_1',
-            meta: {
-              icon: 'md-funnel',
-              title: '三级'
-            },
-            component: () => import('@/view/multilevel/level-2-2/level-2-2-1.vue')
-          },
-          {
-            path: 'level_2_2_2',
-            name: 'level_2_2_2',
-            meta: {
-              icon: 'md-funnel',
-              title: '三级'
-            },
-            component: () => import('@/view/multilevel/level-2-2/level-2-2-2.vue')
-          }
-        ]
-      },
-      {
-        path: 'level_2_3',
-        name: 'level_2_3',
-        meta: {
-          icon: 'md-funnel',
-          title: '二级-3'
-        },
-        component: () => import('@/view/multilevel/level-2-3.vue')
+        component: () => import('@/view/components/lyjviews/user/user.vue')
       }
     ]
   },
+  {
+    path: '/volunteer',
+    name: 'volunteer',
+    meta: {
+      icon: 'logo-buffer',
+      title: '志愿者'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'volunteer_page',
+        name: 'volunteer_page',
+        meta: {
+          icon: 'md-grid',
+          title: '志愿者'
+        },
+        component: () => import('@/view/components/lyjviews/volunteer/volunteer.vue')
+      }
+    ]
+  },
+  // {
+  //   path: '/multilevel',
+  //   name: 'multilevel',
+  //   meta: {
+  //     icon: 'md-menu',
+  //     title: '多级菜单'
+  //   },
+  //   component: Main,
+  //   children: [
+  //     {
+  //       path: 'level_2_1',
+  //       name: 'level_2_1',
+  //       meta: {
+  //         icon: 'md-funnel',
+  //         title: '二级-1'
+  //       },
+  //       component: () => import('@/view/multilevel/level-2-1.vue')
+  //     },
+  //     {
+  //       path: 'level_2_2',
+  //       name: 'level_2_2',
+  //       meta: {
+  //         access: ['super_admin'],
+  //         icon: 'md-funnel',
+  //         showAlways: true,
+  //         title: '二级-2'
+  //       },
+  //       component: parentView,
+  //       children: [
+  //         {
+  //           path: 'level_2_2_1',
+  //           name: 'level_2_2_1',
+  //           meta: {
+  //             icon: 'md-funnel',
+  //             title: '三级'
+  //           },
+  //           component: () => import('@/view/multilevel/level-2-2/level-2-2-1.vue')
+  //         },
+  //         {
+  //           path: 'level_2_2_2',
+  //           name: 'level_2_2_2',
+  //           meta: {
+  //             icon: 'md-funnel',
+  //             title: '三级'
+  //           },
+  //           component: () => import('@/view/multilevel/level-2-2/level-2-2-2.vue')
+  //         }
+  //       ]
+  //     },
+  //     {
+  //       path: 'level_2_3',
+  //       name: 'level_2_3',
+  //       meta: {
+  //         icon: 'md-funnel',
+  //         title: '二级-3'
+  //       },
+  //       component: () => import('@/view/multilevel/level-2-3.vue')
+  //     }
+  //   ]
+  // },
   {
     path: '/argu',
     name: 'argu',

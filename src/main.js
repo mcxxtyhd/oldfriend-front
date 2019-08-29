@@ -19,6 +19,10 @@ import global_msg from '../src/api/global.js'
 
 import axios from 'axios'
 
+import moment from 'moment'//导入文件
+ 
+Vue.prototype.$moment = moment;//赋值使用
+
 Vue.prototype.global = global_msg;
 // 实际打包时应该不引入mock
 /* eslint-disable */

@@ -7,12 +7,11 @@
             <Table ref="table" :columns="columns1" :data="data1" style="width: 100%;">
               <div slot="header" style="margin: 0 10px;">
                 <div style="float: left;">
-                  <Input v-model="searchData" placeholder="需求类型名称" style="width: 200px;" />
+                  <Input v-model="searchData" placeholder="用户名称" style="width: 200px;" />
                   <Button icon="search" @click="findData()">查询</Button>
                 </div>
                 <div style="float: right;">
-                  <!-- <Button  type="primary"  :loading="exportLoading" @click="excel">导出文件</Button> -->
-                  <Button icon="plus" type="primary" @click="addRt">添加需求类型</Button>
+                  <Button icon="plus" type="primary" @click="addUser">添加用户</Button>
                 </div>
               </div>
               <div slot="footer" style="text-align: right;margin-right: 10px;">
@@ -32,30 +31,30 @@
         </Content>
       </Layout>
     </Layout>
-    <Modal v-model="hasAdd" title="添加需求类型" width="500">
-      <rtAdd ref="rtAdd" :form="rtAddForm"></rtAdd>
+    <Modal v-model="hasAdd" title="添加用户" width="500">
+      <userAdd ref="userAdd" :form="userAddForm"></userAdd>
       <div slot="footer" style="text-align: center;">
         <Button type="primary" @click="saveAdd">保存</Button>
         <Button @click="cancelAdd">取消</Button>
       </div>
     </Modal>
-    <Modal v-model="hasEdit" title="编辑需求类型" width="500">
-				<rtEdit ref="rtEdit" :form="rtEditForm"></rtEdit>
-				<div slot="footer" style="text-align: center;">
-					<Button type="primary" @click="saveEdit">保存</Button>
-					<Button @click="cancelEdit">取消</Button>
-				</div>
+    <Modal v-model="hasEdit" title="编辑用户" width="500">
+      <userEdit ref="userEdit" :form="userEditForm"></userEdit>
+      <div slot="footer" style="text-align: center;">
+        <Button type="primary" @click="saveEdit">保存</Button>
+        <Button @click="cancelEdit">取消</Button>
+      </div>
     </Modal>
   </div>
 </template>
 <script>
-import rtAdd from "../requirement-type/operation/rtAdd";
-import rtEdit from "../requirement-type/operation/rtEdit";
+import userAdd from "../user/operation/userAdd";
+import userEdit from "../user/operation/userEdit";
 
 export default {
   components: {
-    rtAdd,
-    rtEdit
+    userAdd,
+    userEdit
   },
   data() {
     return {
@@ -69,19 +68,69 @@ export default {
       hasEdit: false,
       flag: true,
       api: "",
-      rtAddForm: {
-        lyjRequirementTypename: "",
-        lyjRequirementTypeparentid: ""
+      userAddForm: {
+        lyjUserId: "",
+        lyjUserOpenid: "",
+        lyjUserUuid: "",
+        lyjUserName: "",
+        lyjUserPassword: "",
+        lyjUserGender: "",
+        lyjUserLocation: "",
+        lyjUserBirthday: "",
+        lyjUserAge: "",
+        lyjUserCountry: "",
+        lyjUserPhone: "",
+        lyjUserLivingplace: "",
+        lyjUserWorkplace: "",
+        lyjUserRewards: "",
+        lyjUserCreditid: "",
+        lyjUserCreditpositive: "",
+        lyjUserCreditnegative: ""
       },
-      rtEditForm: {
-        id: "",
-        lyjRequirementTypename: "",
-        lyjRequirementTypeparentid: ""
+      userEditForm: {
+        lyjUserId: "",
+        lyjUserOpenid: "",
+        lyjUserUuid: "",
+        lyjUserName: "",
+        lyjUserPassword: "",
+        lyjUserGender: "",
+        lyjUserLocation: "",
+        lyjUserBirthday: "",
+        lyjUserAge: "",
+        lyjUserCountry: "",
+        lyjUserPhone: "",
+        lyjUserLivingplace: "",
+        lyjUserWorkplace: "",
+        lyjUserRewards: "",
+        lyjUserCreditid: "",
+        lyjUserCreditpositive: "",
+        lyjUserCreditnegative: ""
       },
       columns1: [
         {
-          title: "名称",
-          key: "lyjRequirementTypename"
+          title: "用户姓名",
+          key: "lyjUserName"
+        },
+        {
+          title: "手机号码",
+          key: "lyjUserPhone"
+        },
+        {
+          title: "用户唯一标识",
+          key: "lyjUserUuid"
+        },
+        {
+          title: "出生日期",
+          key: "lyjUserBirthday",
+          render:(h, params) =>{
+            return h('div', 
+            params.row.lyjUserBirthday!=null?
+            this.$moment(params.row.lyjUserBirthday).format('YYYY-MM-DD'):null);/*这里的this.row能够获取当前行的数据*/
+          }
+        },
+        {
+          title: "身份证号码",
+          key: "lyjUserCreditid"
         },
         {
           title: "操作",
@@ -90,21 +139,24 @@ export default {
 
           render: (h, params) => {
             let bts = [
-              h('Button', {
-									style: {
-										margin: '0 5px',
-									},
-									props: {
-										type: 'primary',
-										size: 'small',
-										
-									},
-									on: {
-										click: () => {
-											this.editForm(params.row);
-										}
-									}
-								}, '编辑'),
+              h(
+                "Button",
+                {
+                  style: {
+                    margin: "0 5px"
+                  },
+                  props: {
+                    type: "primary",
+                    size: "small"
+                  },
+                  on: {
+                    click: () => {
+                      this.editForm(params.row);
+                    }
+                  }
+                },
+                "编辑"
+              ),
               h(
                 "Button",
                 {
@@ -117,7 +169,7 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.deleteRt(params.row);
+                      this.deleteUser(params.row);
                     }
                   }
                 },
@@ -132,7 +184,7 @@ export default {
     };
   },
   methods: {
-    //查询需求类型
+    //查询用户
     findData(page) {
       if (!page) {
         this.page.current = 1;
@@ -140,7 +192,7 @@ export default {
         this.page.current = page;
       }
       this.axios
-        .get(this.global.host + "/RquirementType", {
+        .get(this.global.host + "/User", {
           params: {
             searchText: this.searchData,
             pageNo: this.page.current,
@@ -148,6 +200,7 @@ export default {
           }
         })
         .then(res => {
+          console.log(res);
           this.data1 = res.data.data.list;
           this.page.total = res.data.listCount;
         })
@@ -155,26 +208,41 @@ export default {
           alert("请求失败");
         });
     },
-    //编辑需求类型modal窗口
+    //编辑用户modal窗口
     editForm(rowdata) {
-      this.$refs['rtEdit'].reset(this.rtEditForm);
-      this.rtEditForm = {
-          ...rowdata,
+      this.$refs["userEdit"].reset(this.userEditForm);
+      this.userEditForm = {
+        ...rowdata
       };
-      // this.$refs['rtEdit'].initForm(this.rtEditForm);
+      this.$refs["userEdit"].initForm(this.userEditForm);
       this.hasEdit = true;
     },
     //添加
-    addRt() {
+    addUser() {
       this.resetForm();
       this.hasAdd = true;
       this.flag = true;
     },
     //重置添加模板
     resetForm() {
-      this.rtAddForm = {
-        lyjRequirementTypename: "",
-        lyjRequirementTypeparentid: ""
+      this.userAddForm = {
+        lyjUserId: "",
+        lyjUserOpenid: "",
+        lyjUserUuid: "",
+        lyjUserName: "",
+        lyjUserPassword: "",
+        lyjUserGender: "",
+        lyjUserLocation: "",
+        lyjUserBirthday: "",
+        lyjUserAge: "",
+        lyjUserCountry: "",
+        lyjUserPhone: "",
+        lyjUserLivingplace: "",
+        lyjUserWorkplace: "",
+        lyjUserRewards: "",
+        lyjUserCreditid: "",
+        lyjUserCreditpositive: "",
+        lyjUserCreditnegative: ""
       };
     },
     //添加关闭
@@ -188,7 +256,6 @@ export default {
     pageChange(page) {
       this.findData(page);
     },
-
     pageSizeChange(pageSize) {
       this.page.pageSize = pageSize;
       this.findData(this.page.current);
@@ -197,14 +264,14 @@ export default {
     saveAdd() {
       if (this.flag == true) {
         this.flag = false;
-        this.$refs["rtAdd"].handleSubmit().then(valid => {
+        this.$refs["userAdd"].handleSubmit().then(valid => {
           if (valid == true) {
             this.hasAdd = false;
             this.axios
-              .post(this.global.host + "/RquirementType",this.rtAddForm)
+              .post(this.global.host + "/User", this.userAddForm)
               .then(res => {
+                this.$Message.success("新增成功");
                 this.findData();
-                this.$Message.success('新增成功');
               })
               .catch(err => {
                 alert("请求失败");
@@ -216,19 +283,14 @@ export default {
     },
     //修改保存按钮
     saveEdit() {
-      this.$refs["rtEdit"].handleSubmit().then(valid => {
+      this.$refs["userEdit"].handleSubmit().then(valid => {
         if (valid == true) {
           this.hasEdit = false;
           this.axios
-            .put(this.global.host +"/RquirementType", {
-              lyjRequirementTypeid: this.rtEditForm.lyjRequirementTypeid,
-              lyjRequirementTypename: this.rtEditForm.lyjRequirementTypename,
-              lyjRequirementTypeparentid: this.rtEditForm
-                .lyjRequirementTypeparentid
-            })
+            .put(this.global.host + "/User", this.userEditForm)
             .then(res => {
               this.findData();
-              this.$Message.success('编辑成功');
+              this.$Message.success("编辑成功");
             })
             .catch(err => {
               alert("请求失败");
@@ -237,18 +299,16 @@ export default {
       });
     },
     //删除
-    deleteRt(rtype) {
+    deleteUser(data) {
       this.$Modal.confirm({
         title: "提示",
         content: "确认删除该数据吗？",
         onOk: () => {
           this.axios
-            .delete(
-              this.global.host + "/RquirementType/" + rtype.lyjRequirementTypeid
-            )
+            .delete(this.global.host + "/User/" + data.lyjUserId)
             .then(res => {
               this.findData();
-              this.$Message.success('删除成功');
+              this.$Message.success("删除成功");
             })
             .catch(err => {
               alert("请求失败");

@@ -7,12 +7,11 @@
             <Table ref="table" :columns="columns1" :data="data1" style="width: 100%;">
               <div slot="header" style="margin: 0 10px;">
                 <div style="float: left;">
-                  <Input v-model="searchData" placeholder="需求类型名称" style="width: 200px;" />
+                  <Input v-model="searchData" placeholder="志愿者名称" style="width: 200px;" />
                   <Button icon="search" @click="findData()">查询</Button>
                 </div>
                 <div style="float: right;">
-                  <!-- <Button  type="primary"  :loading="exportLoading" @click="excel">导出文件</Button> -->
-                  <Button icon="plus" type="primary" @click="addRt">添加需求类型</Button>
+                  <Button icon="plus" type="primary" @click="addRt">添加志愿者</Button>
                 </div>
               </div>
               <div slot="footer" style="text-align: right;margin-right: 10px;">
@@ -32,30 +31,21 @@
         </Content>
       </Layout>
     </Layout>
-    <Modal v-model="hasAdd" title="添加需求类型" width="500">
-      <rtAdd ref="rtAdd" :form="rtAddForm"></rtAdd>
+    <Modal v-model="hasAdd" title="添加志愿者" width="500">
+      <volunteerAdd ref="volunteerAdd" :form="volunteerAddForm"></volunteerAdd>
       <div slot="footer" style="text-align: center;">
         <Button type="primary" @click="saveAdd">保存</Button>
         <Button @click="cancelAdd">取消</Button>
       </div>
     </Modal>
-    <Modal v-model="hasEdit" title="编辑需求类型" width="500">
-				<rtEdit ref="rtEdit" :form="rtEditForm"></rtEdit>
-				<div slot="footer" style="text-align: center;">
-					<Button type="primary" @click="saveEdit">保存</Button>
-					<Button @click="cancelEdit">取消</Button>
-				</div>
-    </Modal>
   </div>
 </template>
 <script>
-import rtAdd from "../requirement-type/operation/rtAdd";
-import rtEdit from "../requirement-type/operation/rtEdit";
+import volunteerAdd from "../volunteer/operation/volunteerAdd";
 
 export default {
   components: {
-    rtAdd,
-    rtEdit
+    volunteerAdd
   },
   data() {
     return {
@@ -66,22 +56,25 @@ export default {
         total: 0
       },
       hasAdd: false,
-      hasEdit: false,
       flag: true,
       api: "",
-      rtAddForm: {
-        lyjRequirementTypename: "",
-        lyjRequirementTypeparentid: ""
-      },
-      rtEditForm: {
-        id: "",
-        lyjRequirementTypename: "",
-        lyjRequirementTypeparentid: ""
+      volunteerAddForm: {
+        lyjVolunteerId: "",
+        lyjUserId: "",
+        lyjUsername: ""
       },
       columns1: [
         {
-          title: "名称",
-          key: "lyjRequirementTypename"
+          title: "志愿者ID",
+          key: "lyjVolunteerId"
+        },
+        {
+          title: "用户UUID",
+          key: "lyjUserId"
+        },
+        {
+          title: "志愿者名称",
+          key: "lyjUsername"
         },
         {
           title: "操作",
@@ -90,21 +83,6 @@ export default {
 
           render: (h, params) => {
             let bts = [
-              h('Button', {
-									style: {
-										margin: '0 5px',
-									},
-									props: {
-										type: 'primary',
-										size: 'small',
-										
-									},
-									on: {
-										click: () => {
-											this.editForm(params.row);
-										}
-									}
-								}, '编辑'),
               h(
                 "Button",
                 {
@@ -117,7 +95,7 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.deleteRt(params.row);
+                      this.deleteVolunteer(params.row);
                     }
                   }
                 },
@@ -132,7 +110,7 @@ export default {
     };
   },
   methods: {
-    //查询需求类型
+    //查询志愿者
     findData(page) {
       if (!page) {
         this.page.current = 1;
@@ -140,9 +118,8 @@ export default {
         this.page.current = page;
       }
       this.axios
-        .get(this.global.host + "/RquirementType", {
+        .get(this.global.host + "/Volunteer", {
           params: {
-            searchText: this.searchData,
             pageNo: this.page.current,
             pageSize: this.page.pageSize
           }
@@ -155,15 +132,6 @@ export default {
           alert("请求失败");
         });
     },
-    //编辑需求类型modal窗口
-    editForm(rowdata) {
-      this.$refs['rtEdit'].reset(this.rtEditForm);
-      this.rtEditForm = {
-          ...rowdata,
-      };
-      // this.$refs['rtEdit'].initForm(this.rtEditForm);
-      this.hasEdit = true;
-    },
     //添加
     addRt() {
       this.resetForm();
@@ -172,18 +140,14 @@ export default {
     },
     //重置添加模板
     resetForm() {
-      this.rtAddForm = {
-        lyjRequirementTypename: "",
-        lyjRequirementTypeparentid: ""
+      this.volunteerAddForm = {
+        lyjvolunteerTypename: "",
+        lyjvolunteerTypeparentid: ""
       };
     },
     //添加关闭
     cancelAdd() {
       this.hasAdd = false;
-    },
-    //编辑关闭
-    cancelEdit() {
-      this.hasEdit = false;
     },
     pageChange(page) {
       this.findData(page);
@@ -197,14 +161,18 @@ export default {
     saveAdd() {
       if (this.flag == true) {
         this.flag = false;
-        this.$refs["rtAdd"].handleSubmit().then(valid => {
+        this.$refs["volunteerAdd"].handleSubmit().then(valid => {
           if (valid == true) {
+
+              // console.log("2222222222")
+              // console.log(this.volunteerAddForm.lyjUserId)
+
             this.hasAdd = false;
             this.axios
-              .post(this.global.host + "/RquirementType",this.rtAddForm)
+              .post(this.global.host + "/Volunteer",this.volunteerAddForm)
               .then(res => {
+                this.$Message.success("新增成功");
                 this.findData();
-                this.$Message.success('新增成功');
               })
               .catch(err => {
                 alert("请求失败");
@@ -214,41 +182,17 @@ export default {
         });
       }
     },
-    //修改保存按钮
-    saveEdit() {
-      this.$refs["rtEdit"].handleSubmit().then(valid => {
-        if (valid == true) {
-          this.hasEdit = false;
-          this.axios
-            .put(this.global.host +"/RquirementType", {
-              lyjRequirementTypeid: this.rtEditForm.lyjRequirementTypeid,
-              lyjRequirementTypename: this.rtEditForm.lyjRequirementTypename,
-              lyjRequirementTypeparentid: this.rtEditForm
-                .lyjRequirementTypeparentid
-            })
-            .then(res => {
-              this.findData();
-              this.$Message.success('编辑成功');
-            })
-            .catch(err => {
-              alert("请求失败");
-            });
-        }
-      });
-    },
     //删除
-    deleteRt(rtype) {
+    deleteVolunteer(data) {
       this.$Modal.confirm({
         title: "提示",
         content: "确认删除该数据吗？",
         onOk: () => {
           this.axios
-            .delete(
-              this.global.host + "/RquirementType/" + rtype.lyjRequirementTypeid
-            )
+            .delete(this.global.host + "/Volunteer/" + data.lyjVolunteerId)
             .then(res => {
+              this.$Message.success("删除成功");
               this.findData();
-              this.$Message.success('删除成功');
             })
             .catch(err => {
               alert("请求失败");

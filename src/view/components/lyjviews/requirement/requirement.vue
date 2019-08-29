@@ -7,11 +7,12 @@
             <Table ref="table" :columns="columns1" :data="data1" style="width: 100%;">
               <div slot="header" style="margin: 0 10px;">
                 <div style="float: left;">
-                  <Input v-model="searchData" placeholder="广告名称" style="width: 200px;" />
+                  <Input v-model="searchData" placeholder="需求名称" style="width: 200px;" />
                   <Button icon="search" @click="findData()">查询</Button>
                 </div>
                 <div style="float: right;">
-                  <Button icon="plus" type="primary" @click="addRt">添加广告</Button>
+                  <!-- <Button  type="primary"  :loading="exportLoading" @click="excel">导出文件</Button> -->
+                  <Button icon="plus" type="primary" @click="addRequirement">添加需求</Button>
                 </div>
               </div>
               <div slot="footer" style="text-align: right;margin-right: 10px;">
@@ -31,15 +32,15 @@
         </Content>
       </Layout>
     </Layout>
-    <Modal v-model="hasAdd" title="添加广告" width="500">
-      <advertisementAdd ref="advertisementAdd" :form="advertisementAddForm"></advertisementAdd>
+    <Modal v-model="hasAdd" title="添加需求" width="500">
+      <requirementAdd ref="requirementAdd" :form="requirementAddForm"></requirementAdd>
       <div slot="footer" style="text-align: center;">
         <Button type="primary" @click="saveAdd">保存</Button>
         <Button @click="cancelAdd">取消</Button>
       </div>
     </Modal>
-    <Modal v-model="hasEdit" title="编辑广告" width="500">
-      <advertisementEdit ref="advertisementEdit" :form="advertisementEditForm"></advertisementEdit>
+    <Modal v-model="hasEdit" title="编辑需求" width="500">
+      <requirementEdit ref="requirementEdit" :form="requirementEditForm"></requirementEdit>
       <div slot="footer" style="text-align: center;">
         <Button type="primary" @click="saveEdit">保存</Button>
         <Button @click="cancelEdit">取消</Button>
@@ -48,13 +49,13 @@
   </div>
 </template>
 <script>
-import advertisementAdd from "../advertisement/operation/advertisementAdd";
-import advertisementEdit from "../advertisement/operation/advertisementEdit";
+import requirementAdd from "../requirement/operation/requirementAdd";
+import requirementEdit from "../requirement/operation/requirementEdit";
 
 export default {
   components: {
-    advertisementAdd,
-    advertisementEdit
+    requirementAdd,
+    requirementEdit
   },
   data() {
     return {
@@ -68,49 +69,67 @@ export default {
       hasEdit: false,
       flag: true,
       api: "",
-      advertisementAddForm: {
-        lyjAdvertisementId: "",
-        lyjAdvertisementName: "",
-        lyjAdvertisementImageurl: "",
-        lyjAdvertisementBegindatetime: "",
-        lyjAdvertisementEnddatetime: "",
-        lyjAdvertisementPage: "",
-        lyjAdvertisementPageurl: ""
+      requirementAddForm: {
+        lyjRequirementName: "",
+        lyjRequirementDescription: "",
+        lyjRequirementCity: "",
+        lyjRequirementArea: "",
+        lyjRequirementStreet: "",
+        lyjRequirementDetailadd: "",
+        lyjRequirementRawaddress: "",
+        lyjRequirementBegindatetime: "",
+        lyjRequirementEnddatetime: "",
+        lyjRequirementReward: "",
+        lyjRequirementIsvolunteer: "",
+        lyjRequirementVolunteerperfer: "",
+        allTypeIds: [],
+        typeLists: []
       },
-      advertisementEditForm: {
-        lyjAdvertisementId: "",
-        lyjAdvertisementName: "",
-        lyjAdvertisementImageurl: "",
-        lyjAdvertisementBegindatetime: "",
-        lyjAdvertisementEnddatetime: "",
-        lyjAdvertisementPage: "",
-        lyjAdvertisementPageurl: ""
+      requirementEditForm: {
+        lyjRequirementName: "",
+        lyjRequirementDescription: "",
+        lyjRequirementCity: "",
+        lyjRequirementArea: "",
+        lyjRequirementStreet: "",
+        lyjRequirementDetailadd: "",
+        lyjRequirementRawaddress: "",
+        lyjRequirementBegindatetime: "",
+        lyjRequirementEnddatetime: "",
+        lyjRequirementReward: "",
+        lyjRequirementIsvolunteer: "",
+        lyjRequirementVolunteerperfer: "",
+        allTypeIds: [],
+        typeLists: []
       },
       columns1: [
         {
-          title: "广告名称",
-          key: "lyjAdvertisementName"
+          title: "需求名称",
+          key: "lyjRequirementName"
         },
         {
-          title: "广告所属界面",
-          key: "lyjAdvertisementPage"
+          title: "需求描述",
+          key: "lyjRequirementDescription"
+        },
+        {
+          title: "大概地址",
+          key: "lyjRequirementRawaddress"
         },
         {
           title: "开始时间",
-          key: "lyjAdvertisementBegindatetime",
+          key: "lyjRequirementBegindatetime",
           render:(h, params) =>{
             return h('div', 
-            params.row.lyjAdvertisementBegindatetime!=null?
-            this.$moment(params.row.lyjAdvertisementBegindatetime).format('YYYY-MM-DD HH:mm:ss'):null);/*这里的this.row能够获取当前行的数据*/
+            params.row.lyjRequirementBegindatetime!=null?
+            this.$moment(params.row.lyjRequirementBegindatetime).format('YYYY-MM-DD HH:mm:ss'):null);/*这里的this.row能够获取当前行的数据*/
           }
         },
         {
           title: "结束时间",
-          key: "lyjAdvertisementEnddatetime",
+          key: "lyjRequirementEnddatetime",
           render:(h, params) =>{
             return h('div', 
-            params.row.lyjAdvertisementEnddatetime!=null?
-            this.$moment(params.row.lyjAdvertisementEnddatetime).format('YYYY-MM-DD HH:mm:ss'):null);/*这里的this.row能够获取当前行的数据*/
+            params.row.lyjRequirementEnddatetime!=null?
+            this.$moment(params.row.lyjRequirementEnddatetime).format('YYYY-MM-DD HH:mm:ss'):null);/*这里的this.row能够获取当前行的数据*/
           }
         },
         {
@@ -150,7 +169,7 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.deleteAd(params.row);
+                      this.deleteRequirement(params.row);
                     }
                   }
                 },
@@ -161,58 +180,91 @@ export default {
           }
         }
       ],
-      data1: []
+      data1: [],
+      typeLists: []
     };
   },
   methods: {
-    //查询广告
+    //查询需求
     findData(page) {
       if (!page) {
         this.page.current = 1;
       } else {
         this.page.current = page;
       }
+
+      //这个是拿所有的需求
       this.axios
-        .get(this.global.host + "/Advertisement", {
+        .get(this.global.host + "/Requirement", {
           params: {
-            pageName: this.searchData,
+            searchText: this.searchData,
             pageNo: this.page.current,
             pageSize: this.page.pageSize
           }
         })
         .then(res => {
-          this.data1 = res.data.data;
+          this.data1 = res.data.data.list;
           this.page.total = res.data.listCount;
         })
         .catch(err => {
           alert("请求失败");
         });
-    },
-    //编辑广告modal窗口
-    editForm(rowdata) {
-      this.$refs["advertisementEdit"].reset(this.advertisementEditForm);
-      this.advertisementEditForm = {
-        ...rowdata
-      };
-      this.$refs["advertisementEdit"].initForm(this.advertisementEditForm);
-      this.hasEdit = true;
+
+      //这个是拿所有的需求类型
+      this.axios
+        .get(this.global.host + "/RquirementType", {
+          params: { searchText: "" }
+        })
+        .then(res => {
+          this.typeLists = res.data.data.list;
+        })
+        .catch(err => {
+          alert("请求失败");
+        });
     },
     //添加
-    addRt() {
+    addRequirement() {
       this.resetForm();
+      this.$refs["requirementAdd"].init(this.typeLists);
       this.hasAdd = true;
       this.flag = true;
     },
+    //编辑需求窗口
+    editForm(rowdata) {
+      this.$refs["requirementEdit"].reset(
+        this.requirementEditForm,
+        this.typeLists
+      );
+      rowdata.allTypeIds = [];
+      console.log("点击编辑时的数据");
+      console.log(rowdata);
+      if (rowdata.allTypes.length > 0) {
+        for (var i = 0; i < rowdata.allTypes.length; i++) {
+          rowdata.allTypeIds.push(rowdata.allTypes[i].lyjRequirementTypeid);
+        }
+      }
+      this.requirementEditForm = {
+        ...rowdata
+      };
+      this.hasEdit = true;
+    },
     //重置添加模板
     resetForm() {
-      this.advertisementAddForm = {
-        lyjAdvertisementId: "",
-        lyjAdvertisementName: "",
-        lyjAdvertisementImageurl: "",
-        lyjAdvertisementBegindatetime: "",
-        lyjAdvertisementEnddatetime: "",
-        lyjAdvertisementPage: "",
-        lyjAdvertisementPageurl: ""
+      this.requirementAddForm = {
+        lyjRequirementName: "",
+        lyjRequirementDescription: "",
+        lyjRequirementCity: "",
+        lyjRequirementArea: "",
+        lyjRequirementStreet: "",
+        lyjRequirementDetailadd: "",
+        lyjRequirementRawaddress: "",
+        lyjRequirementBegindatetime: "",
+        lyjRequirementEnddatetime: "",
+        lyjRequirementReward: "",
+        lyjRequirementIsvolunteer: "",
+        lyjRequirementVolunteerperfer: "",
+        allTypeIds: [],
+        typeLists: this.typeLists
       };
     },
     //添加关闭
@@ -223,9 +275,11 @@ export default {
     cancelEdit() {
       this.hasEdit = false;
     },
+
     pageChange(page) {
       this.findData(page);
     },
+
     pageSizeChange(pageSize) {
       this.page.pageSize = pageSize;
       this.findData(this.page.current);
@@ -234,14 +288,11 @@ export default {
     saveAdd() {
       if (this.flag == true) {
         this.flag = false;
-        this.$refs["advertisementAdd"].handleSubmit().then(valid => {
+        this.$refs["requirementAdd"].handleSubmit().then(valid => {
           if (valid == true) {
             this.hasAdd = false;
             this.axios
-              .post(
-                this.global.host + "/Advertisement",
-                this.advertisementAddForm
-              )
+              .post(this.global.host + "/Requirement", this.requirementAddForm)
               .then(res => {
                 this.$Message.success("新增成功");
                 this.findData();
@@ -256,14 +307,11 @@ export default {
     },
     //修改保存按钮
     saveEdit() {
-      this.$refs["advertisementEdit"].handleSubmit().then(valid => {
+      this.$refs["requirementEdit"].handleSubmit().then(valid => {
         if (valid == true) {
           this.hasEdit = false;
           this.axios
-            .put(
-              this.global.host + "/Advertisement",
-              this.advertisementEditForm
-            )
+            .put(this.global.host + "/Requirement", this.requirementEditForm)
             .then(res => {
               this.findData();
               this.$Message.success("编辑成功");
@@ -275,15 +323,13 @@ export default {
       });
     },
     //删除
-    deleteAd(data) {
+    deleteRequirement(data) {
       this.$Modal.confirm({
         title: "提示",
         content: "确认删除该数据吗？",
         onOk: () => {
           this.axios
-            .delete(
-              this.global.host + "/Advertisement/" + data.lyjAdvertisementId
-            )
+            .delete(this.global.host + "/Requirement/" + data.lyjRequirementId)
             .then(res => {
               this.findData();
               this.$Message.success("删除成功");
