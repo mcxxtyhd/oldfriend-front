@@ -10,13 +10,16 @@
       <Input placeholder="请输入密码：" v-model="form.lyjUserPassword" required/>
     </FormItem>
     <FormItem label="用户微信openid：" prop="lyjUserOpenid">
-      <Input placeholder="请输入用户微信openid：" v-model="form.lyjUserOpenid" />
+      <Input v-model="form.lyjUserOpenid" disabled/>
     </FormItem>
     <FormItem label="用户唯一标识" prop="lyjUserUuid">
-      <Input placeholder="请输入用户唯一标识：" v-model="form.lyjUserUuid" />
+      <Input v-model="form.lyjUserUuid" disabled />
     </FormItem>
     <FormItem label="性别" prop="lyjUserGender">
-      <Input placeholder="请输入性别：" v-model="form.lyjUserGender" />
+      <RadioGroup v-model="form.lyjUserGender" type="button" size="small">
+        <Radio :label=1>男</Radio>
+        <Radio :label=2>女</Radio>
+      </RadioGroup>
     </FormItem>
     <FormItem label="籍贯" prop="lyjUserLocation">
       <Input placeholder="请输入籍贯：" v-model="form.lyjUserLocation" />

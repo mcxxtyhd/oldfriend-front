@@ -80,6 +80,12 @@ export default {
       },
       columns1: [
         {
+          title: "需求类型ID",
+          key: "lyjRequirementTypeid",
+          width:100,
+          align:"center",
+        },
+        {
           title: "名称",
           key: "lyjRequirementTypename"
         },

@@ -236,8 +236,6 @@ export default {
         this.typeLists
       );
       rowdata.allTypeIds = [];
-      console.log("点击编辑时的数据");
-      console.log(rowdata);
       if (rowdata.allTypes.length > 0) {
         for (var i = 0; i < rowdata.allTypes.length; i++) {
           rowdata.allTypeIds.push(rowdata.allTypes[i].lyjRequirementTypeid);
@@ -308,6 +306,10 @@ export default {
     //修改保存按钮
     saveEdit() {
       this.$refs["requirementEdit"].handleSubmit().then(valid => {
+
+        // console.log("here is the check")
+        // console.log(this.requirementEditForm)
+
         if (valid == true) {
           this.hasEdit = false;
           this.axios

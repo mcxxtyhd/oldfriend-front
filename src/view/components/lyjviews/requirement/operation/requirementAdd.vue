@@ -1,18 +1,16 @@
 <template>
   <Form ref="form" :model="form" :rules="ruleValidate" :label-width="120">
-    <FormItem label="需求名称" prop="lyjRequirementName" required>
-      <Input placeholder="请输入需求名称" v-model="form.lyjRequirementName" />
+    <FormItem label="需求名称：" prop="lyjRequirementName" required>
+      <Input placeholder="请输入需求名称：" v-model="form.lyjRequirementName" />
+    </FormItem>
+    <FormItem label="需求类型：" prop="allTypeIds" required>
+      <CheckboxGroup v-model="form.allTypeIds" v-for="item in typeLists" :key="item.lyjRequirementTypeid" >
+        <Checkbox :label="item.lyjRequirementTypeid">{{item.lyjRequirementTypename}}</Checkbox>
+      </CheckboxGroup>
     </FormItem>
     <FormItem label="需求描述：" prop="lyjRequirementDescription">
       <Input placeholder="请输入需求描述：：" v-model="form.lyjRequirementDescription" />
     </FormItem>
-
-    <FormItem label="需求类型：" prop="allTypeIds">
-      <CheckboxGroup v-model="form.allTypeIds" v-for="item in typeLists" :key="item.lyjRequirementTypeid">
-        <Checkbox :label="item.lyjRequirementTypeid">{{item.lyjRequirementTypename}}</Checkbox>
-      </CheckboxGroup>
-    </FormItem>
-
     <FormItem label="城市：" prop="lyjRequirementCity">
       <Input placeholder="请输入城市：" v-model="form.lyjRequirementCity" />
     </FormItem>
@@ -42,10 +40,16 @@
       <Input placeholder="请输入积分：" v-model="form.lyjRequirementReward" />
     </FormItem>
     <FormItem label="是否为义工需求：" prop="lyjRequirementIsvolunteer">
-      <Input placeholder="请选择是否为义工需求：" v-model="form.lyjRequirementIsvolunteer" />
+      <RadioGroup v-model="form.lyjRequirementIsvolunteer" type="button" size="small">
+        <Radio :label=1>是</Radio>
+        <Radio :label=2>否</Radio>
+      </RadioGroup>
     </FormItem>
     <FormItem label="义工优先性别：" prop="lyjRequirementVolunteerperfer">
-      <Input placeholder="请选择义工优先性别：" v-model="form.lyjRequirementVolunteerperfer" />
+      <RadioGroup v-model="form.lyjRequirementVolunteerperfer" type="button" size="small">
+        <Radio :label=1>男</Radio>
+        <Radio :label=2>女</Radio>
+      </RadioGroup>
     </FormItem>
   </Form>
 </template>
@@ -77,28 +81,11 @@ export default {
         lyjRequirementName: [
           { required: true, message: "需求名称不能为空", trigger: "blur" }
         ],
+        allTypeIds: [
+          { required: true,type:'array', message: "需求类型是必须选择的", trigger: "blur" }
+        ],
       }
     };
-  },
-  created(){
-    // for(var i=0;i<this.form.typeLists.size;i++){
-
-    // }
-
-    // this.axios
-    //     .get(this.global.host + "/RquirementType", {
-    //       params: {
-    //         searchText: "",
-    //       }
-    //     })
-    //     .then(res => {
-    //       for(var i=0;i<res.data.data.list.length;i++){
-    //         this.typeLists.push(res.data.data.list[i])
-    //       }
-    //     })
-    //     .catch(err => {
-    //       alert("请求失败");
-    //     });
   },
   methods: {
     reset(form) {

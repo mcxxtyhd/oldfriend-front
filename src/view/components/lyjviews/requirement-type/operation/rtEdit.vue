@@ -1,6 +1,6 @@
 <template>
   <Form ref="form" :model="form" :rules="ruleValidate" :label-width="150">
-    <FormItem label="需求类型名称" prop="lyjRequirementTypename" required>
+    <FormItem label="需求类型名称" prop="lyjRequirementTypename">
       <Input placeholder="请输入需求类型名称" v-model="form.lyjRequirementTypename" />
     </FormItem>
     <FormItem label="需求类型父ID：" prop="lyjRequirementTypeparentid">
@@ -23,7 +23,7 @@ export default {
       ruleValidate: {
         lyjRequirementTypename: [
           { required: true, message: "需求类型名称不能为空", trigger: "blur" }
-        ]
+        ],
       }
     };
   },

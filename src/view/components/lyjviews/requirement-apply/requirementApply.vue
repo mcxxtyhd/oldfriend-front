@@ -99,6 +99,10 @@ export default {
           key: "lyjUserId"
         },
         {
+          title: "志愿者ID",
+          key: "lyjVolunteerId"
+        },
+        {
           title: "申请状态",
           key: "lyjRequirementApplystate",
           render:(h,params)=>{
@@ -249,8 +253,6 @@ export default {
         this.flag = false;
         this.$refs["raAdd"].handleSubmit().then(valid => {
           if (valid == true) {
-
-            console.log(this.raAddForm)
             this.hasAdd = false;
             this.axios
               .post(this.global.host + "/RequirementApply",this.raAddForm)
