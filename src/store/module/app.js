@@ -98,9 +98,11 @@ export default {
         userId,
         userName
       }
-      saveErrorLogger(info).then(() => {
-        commit('addError', data)
-      })
+
+      //这里是保存错误日志
+      // saveErrorLogger(info).then(() => {
+      //   commit('addError', data)
+      // })
     }
   }
 }

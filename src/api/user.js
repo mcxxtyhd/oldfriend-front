@@ -2,11 +2,11 @@ import axios from '@/libs/api.request'
 
 export const login = ({ userName, password }) => {
   const data = {
-    userName,
-    password
+    lyjUserPhone:userName,
+    lyjUserPassword:password
   }
   return axios.request({
-    url: 'login',
+    url: '/User/loginHT',
     data,
     method: 'post'
   })
@@ -14,9 +14,9 @@ export const login = ({ userName, password }) => {
 
 export const getUserInfo = (token) => {
   return axios.request({
-    url: 'get_info',
+    url: '/User/userinfo',
     params: {
-      token
+      userUUID:token
     },
     method: 'get'
   })
@@ -29,6 +29,7 @@ export const logout = (token) => {
   })
 }
 
+//获取未读消息  就是左上方那个有多少个提醒
 export const getUnreadCount = () => {
   return axios.request({
     url: 'message/count',

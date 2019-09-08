@@ -9,7 +9,7 @@ const addErrorLog = errorInfo => {
     mes: statusText,
     url: responseURL
   }
-  if (!responseURL.includes('save_error_logger')) store.dispatch('addErrorLog', info)
+  // if (!responseURL.includes('save_error_logger')) store.dispatch('addErrorLog', info)
 }
 
 class HttpRequest {
@@ -65,6 +65,10 @@ class HttpRequest {
     })
   }
   request (options) {
+
+    console.log("here is the request method:")
+    console.log(options)
+    
     const instance = axios.create()
     options = Object.assign(this.getInsideConfig(), options)
     this.interceptors(instance, options.url)

@@ -16,7 +16,6 @@ import parentView from '@/components/parent-view'
  *  beforeCloseName: (-) 设置该字段，则在关闭当前tab页时会去'@/router/before-close.js'里寻找该字段名对应的方法，作为关闭前的钩子函数
  * }
  */
-
 export default [
   {
     path: '/login',
@@ -50,26 +49,6 @@ export default [
       }
     ]
   },
-  // {
-  //   path: '/components',
-  //   name: 'components',
-  //   meta: {
-  //     icon: 'logo-buffer',
-  //     title: '组件'
-  //   },
-  //   component: Main,
-  //   children: [
-  //     {
-  //       path: 'tables_page',
-  //       name: 'tables_page',
-  //       meta: {
-  //         icon: 'md-grid',
-  //         title: '多功能表格'
-  //       },
-  //       component: () => import('@/view/components/tables/tables.vue')
-  //     }
-  //   ]
-  // },
   {
     path: '/advertisement',
     name: 'advertisement',
@@ -83,6 +62,7 @@ export default [
         path: 'advertisement_page',
         name: '广告',
         meta: {
+          // access:['theo'],
           icon: 'md-grid',
           title: '广告'
         },
@@ -169,6 +149,26 @@ export default [
       }
     ]
   },
+   // {
+  //   path: '/components',
+  //   name: 'components',
+  //   meta: {
+  //     icon: 'logo-buffer',
+  //     title: '组件'
+  //   },
+  //   component: Main,
+  //   children: [
+  //     {
+  //       path: 'tables_page',
+  //       name: 'tables_page',
+  //       meta: {
+  //         icon: 'md-grid',
+  //         title: '多功能表格'
+  //       },
+  //       component: () => import('@/view/components/tables/tables.vue')
+  //     }
+  //   ]
+  // },
   // {
   //   path: '/multilevel',
   //   name: 'multilevel',
