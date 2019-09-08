@@ -83,9 +83,14 @@ export default {
           password
         }).then(res => {
           console.log("调用成功")
-          const data = res.data
-          commit('setToken', data.data)
-          resolve()
+          if(res.data.statusCode===500){
+            console.log("登录失败")
+            alert("登录失败，用户名密码错误")
+          }else{
+            const data = res.data
+            commit('setToken', data.data)
+            resolve()
+          }
         }).catch(err => {
 
           console.log("调用失败")
