@@ -121,10 +121,10 @@ export default {
             const data = res.data
             console.log("这是结果啊  看好了")
             console.log(res)
-            commit('setAvatar', data.avatar)
-            commit('setUserName', data.name)
-            commit('setUserId', data.user_id)
-            commit('setAccess', data.access)
+            // commit('setAvatar', data.avatar)
+            commit('setUserName', data.lyjUserName)
+            commit('setUserId', data.lyjUserUuid)
+            commit('setAccess', data.permissions)
             commit('setHasGetInfo', true)
             resolve(data)
           }).catch(err => {
